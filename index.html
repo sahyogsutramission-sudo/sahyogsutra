@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A.S VISION INDIA - सहयोग सूत्र</title>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <style>
+        body { font-family: sans-serif; background: #f4f7f6; text-align: center; padding: 20px; }
+        .box { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); max-width: 380px; margin: auto; border-top: 5px solid #007bff; }
+        h2 { color: #007bff; margin-bottom: 5px; }
+        input { width: 90%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; }
+        button { width: 95%; padding: 12px; background: #28a745; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2>A.S VISION INDIA</h2>
+        <p style="font-size: 12px; color: #666;">सहयोग सूत्र मिशन (NGO Sponsored)</p>
+        <hr>
+        <input type="text" id="p" placeholder="एक्टिवेशन पिन (₹21)">
+        <input type="text" id="n" placeholder="आपका पूरा नाम">
+        <input type="number" id="m" placeholder="मोबाइल नंबर">
+        <button onclick="alert('पंजीकरण सफल! लॉगिन करें।')">मिशन से जुड़ें</button>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBOHeQYWdcpLhiKLRlg_1QLu8YIEd2hCdg",
+            authDomain: "sahyogsutra-20638.firebaseapp.com",
+            projectId: "sahyogsutra-20638",
+            databaseURL: "https://sahyogsutra-20638-default-rtdb.firebaseio.com"
+        };
+        firebase.initializeApp(firebaseConfig);
+    </script>
+</body>
+</html>
