@@ -9,65 +9,57 @@
         * { margin:0; padding:0; box-sizing:border-box; font-family: 'Poppins', sans-serif; }
         body { background: #f0f2f5; padding: 20px; }
         
-        /* Login Overlay */
-        #adminAuth { position: fixed; top:0; left:0; width:100%; height:100%; background:white; z-index:9999; display: flex; justify-content: center; align-items: center; }
+        /* Auth Screen */
+        #auth { position: fixed; top:0; left:0; width:100%; height:100%; background:white; z-index:9999; display: flex; justify-content: center; align-items: center; }
         .auth-card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; width: 90%; max-width: 350px; }
         
-        /* Dashboard Layout */
-        #dashboard { display: none; max-width: 900px; margin: auto; }
-        .card { background: white; padding: 25px; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        h2 { color: #1a73e8; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        /* Main Dashboard */
+        #main { display: none; max-width: 800px; margin: auto; }
+        .section { background: white; padding: 25px; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        h2 { color: #1a73e8; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
         
-        input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; }
-        .btn { background: #28a745; color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; }
+        input { width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 8px; outline: none; }
+        .btn { background: #28a745; color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 5px; }
+        .btn-pin { background: #1a73e8; }
         
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: white; }
-        th, td { border: 1px solid #eee; padding: 12px; text-align: left; font-size: 14px; }
-        th { background: #f8f9fa; color: #555; }
-        .status-used { color: #dc3545; font-weight: bold; }
-        .status-new { color: #28a745; font-weight: bold; }
+        .list-box { max-height: 200px; overflow-y: auto; background: #f9f9f9; padding: 10px; border-radius: 8px; font-size: 14px; }
     </style>
 </head>
 <body>
 
-<div id="adminAuth">
+<div id="auth">
     <div class="auth-card">
-        <i class="fas fa-user-shield fa-3x" style="color:#1a73e8; margin-bottom:15px;"></i>
+        <i class="fas fa-user-lock fa-3x" style="color:#1a73e8; margin-bottom:15px;"></i>
         <h2>Admin Login</h2>
-        <input type="password" id="adminPass" placeholder="Enter Admin Password">
-        <button class="btn" onclick="checkAuth()">Login Dashboard</button>
+        <input type="password" id="pass" placeholder="Enter Password">
+        <button class="btn btn-pin" onclick="login()">Open Dashboard</button>
     </div>
 </div>
 
-<div id="dashboard">
-    <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <h1>Sahyog Admin Dashboard</h1>
+<div id="main">
+    <div style="display:flex; justify-content: space-between; margin-bottom: 20px;">
+        <h1>Sahyog Master Admin</h1>
         <button onclick="location.reload()" style="background:#666; color:white; border:none; padding:5px 15px; border-radius:5px;">Logout</button>
     </div>
 
-    <div class="card">
-        <h2><i class="fas fa-plus-circle"></i> Create New ₹21 PIN</h2>
-        <div style="display:flex; gap:10px;">
-            <input type="number" id="pinInput" placeholder="Enter 6-digit PIN">
-            <button class="btn" style="width:auto;" onclick="makePin()">Create</button>
-        </div>
+    <div class="section">
+        <h2><i class="fas fa-key"></i> Create Activation PIN (₹21)</h2>
+        <input type="number" id="pinInput" placeholder="Enter 6-digit PIN">
+        <button class="btn btn-pin" onclick="addPin()">पिन सुरक्षित करें (Save PIN)</button>
     </div>
 
-    <div class="card">
-        <h2><i class="fas fa-users"></i> Registered Members</h2>
-        <div style="overflow-x: auto;">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Name</th>
-                        <th>Mobile</th>
-                        <th>PIN</th>
-                    </tr>
-                </thead>
-                <tbody id="memberList"></tbody>
-            </table>
-        </div>
+    <div class="section">
+        <h2><i class="fas fa-store"></i> Add New Franchise</h2>
+        <input type="text" id="fn" placeholder="Franchise Name (उदा. साहू मोबाइल)">
+        <input type="text" id="fl" placeholder="Location (जिला / तहसील / गांव)">
+        <input type="text" id="fo" placeholder="Operator Name (नाम)">
+        <input type="tel" id="fm" placeholder="WhatsApp / Call Mobile Number">
+        <button class="btn" onclick="addFranchise()">फ्रेंचाइजी लाइव करें (Add Franchise)</button>
+    </div>
+
+    <div class="section">
+        <h2><i class="fas fa-users"></i> Recent Members</h2>
+        <div id="userList" class="list-box">लोड हो रहा है...</div>
     </div>
 </div>
 
@@ -75,55 +67,54 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
 <script>
-    // 1. Firebase Config (Paste your actual details here)
-    const firebaseConfig = {
-        apiKey: "YOUR_API_KEY",
-        databaseURL: "YOUR_DATABASE_URL",
-        projectId: "YOUR_PROJECT_ID",
-        appId: "YOUR_APP_ID"
-    };
-    firebase.initializeApp(firebaseConfig);
+    // Firebase Config (ऑटो-लिंक्ड)
+    firebase.initializeApp({ databaseURL: "https://sahyogsutra-default-rtdb.firebaseio.com" });
     const db = firebase.database();
 
-    // 2. Authentication Logic
-    function checkAuth() {
-        const pass = document.getElementById('adminPass').value;
-        // यहाँ अपना मनपसंद पासवर्ड सेट करें (जैसे: 1234)
-        if(pass === "9458") { 
-            document.getElementById('adminAuth').style.display = 'none';
-            document.getElementById('dashboard').style.display = 'block';
-            loadData();
-        } else {
-            alert("Incorrect Admin Password!");
-        }
+    function login() {
+        if(document.getElementById('pass').value === "9458") {
+            document.getElementById('auth').style.display = 'none';
+            document.getElementById('main').style.display = 'block';
+            loadUsers();
+        } else { alert("गलत पासवर्ड!"); }
     }
 
-    // 3. Create PIN Logic
-    function makePin() {
+    // पिन जोड़ने का फंक्शन
+    function addPin() {
         const pin = document.getElementById('pinInput').value;
-        if(pin.length < 4) return alert("Valid PIN enter karein");
-        
+        if(pin.length < 4) return alert("सही पिन डालें!");
         db.ref('pins/' + pin).set({ pin: pin, used: false })
-        .then(() => {
-            alert("PIN " + pin + " Created Successfully!");
-            document.getElementById('pinInput').value = "";
+        .then(() => { alert("PIN " + pin + " सफलतापूर्वक जुड़ गया!"); document.getElementById('pinInput').value = ""; });
+    }
+
+    // फ्रेंचाइजी जोड़ने का फंक्शन
+    function addFranchise() {
+        const name = document.getElementById('fn').value;
+        const loc = document.getElementById('fl').value;
+        const owner = document.getElementById('fo').value;
+        const mob = document.getElementById('fm').value;
+
+        if(!name || !loc || !mob) return alert("पूरी जानकारी भरें!");
+
+        db.ref('franchise').push({ name: name, location: loc, owner: owner, mobile: mob })
+        .then(() => { 
+            alert("फ्रेंचाइजी सफलतापूर्वक होम पेज पर जुड़ गई!"); 
+            document.getElementById('fn').value = "";
+            document.getElementById('fl').value = "";
+            document.getElementById('fo').value = "";
+            document.getElementById('fm').value = "";
         });
     }
 
-    // 4. Load Data Logic
-    function loadData() {
-        db.ref('users').on('value', (snap) => {
-            let html = "";
-            snap.forEach((child) => {
-                const user = child.val();
-                html += `<tr>
-                    <td>${user.regDate || 'N/A'}</td>
-                    <td>${user.name}</td>
-                    <td>${user.mobile}</td>
-                    <td>${user.pin}</td>
-                </tr>`;
+    // सदस्यों की लिस्ट दिखाना
+    function loadUsers() {
+        db.ref('users').on('value', snap => {
+            let h = "";
+            snap.forEach(c => {
+                const u = c.val();
+                h += `<p><b>${u.name}</b> (${u.mobile}) - PIN: ${u.pin}</p>`;
             });
-            document.getElementById('memberList').innerHTML = html;
+            document.getElementById('userList').innerHTML = h || "कोई सदस्य नहीं मिला।";
         });
     }
 </script>
