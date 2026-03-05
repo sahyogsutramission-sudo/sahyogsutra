@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,17 +8,15 @@
     <style>
         * { margin:0; padding:0; box-sizing:border-box; font-family: 'Poppins', sans-serif; }
         body { background: #f4f7f6; overflow-x: hidden; }
-        
+
+        /* Navbar & Sidebar */
         nav { background: white; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
         .logo { font-size: 20px; font-weight: bold; color: #1a73e8; }
         .menu-btn { font-size: 24px; cursor: pointer; color: #333; }
 
-        /* Black Sidebar */
-        .sidebar { position: fixed; top: 0; left: -100%; width: 280px; height: 100%; background: #111; transition: 0.4s; z-index: 2000; padding: 30px 20px; box-shadow: 5px 0 15px rgba(0,0,0,0.5); }
+        .sidebar { position: fixed; top: 0; left: -100%; width: 280px; height: 100%; background: #111; transition: 0.4s; z-index: 2000; padding: 30px 20px; }
         .sidebar.active { left: 0; }
-        .sidebar h2 { color: #1a73e8; margin-bottom: 30px; border-bottom: 1px solid #333; padding-bottom: 10px; }
-        .sidebar a { display: block; color: #bbb; text-decoration: none; padding: 15px 0; font-size: 16px; border-bottom: 1px solid #222; transition: 0.3s; }
-        .sidebar a:hover { color: white; padding-left: 10px; }
+        .sidebar a { display: block; color: #bbb; text-decoration: none; padding: 15px 0; border-bottom: 1px solid #222; }
         .close-sidebar { position: absolute; top: 20px; right: 20px; color: white; font-size: 28px; cursor: pointer; }
 
         /* Hero Section */
@@ -26,14 +24,17 @@
         .hero h1 { font-size: 35px; margin-bottom: 15px; }
         .join-btn { background: #28a745; color: white; padding: 15px 40px; border-radius: 30px; text-decoration: none; font-weight: bold; font-size: 18px; margin-top: 20px; }
 
-        /* Floating Helpline Support */
+        /* --- Floating Helpline Support (वही जो आपको चाहिए था) --- */
         .helpline-container { position: fixed; bottom: 20px; right: 20px; z-index: 3000; }
         .main-support-btn { background: #1a73e8; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 24px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: none; }
-        .support-options { position: absolute; bottom: 70px; right: 0; display: none; flex-direction: column; gap: 10px; width: 180px; }
+        
+        .support-options { position: absolute; bottom: 75px; right: 0; display: none; flex-direction: column; gap: 12px; width: 190px; transition: 0.3s; }
         .support-options.show { display: flex; }
-        .opt { background: white; padding: 12px; border-radius: 10px; text-decoration: none; color: #333; font-weight: bold; font-size: 14px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 10px; }
-        .opt i.fa-whatsapp { color: #25d366; }
-        .opt i.fa-phone-alt { color: #007bff; }
+        
+        .opt { background: white; padding: 12px 15px; border-radius: 12px; text-decoration: none; color: #333; font-weight: bold; font-size: 14px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 12px; }
+        .opt i.fa-whatsapp { color: #25d366; font-size: 20px; }
+        .opt i.fa-phone-alt { color: #007bff; font-size: 18px; }
+        /* --------------------------------------------------------- */
     </style>
 </head>
 <body>
@@ -45,23 +46,28 @@
 
     <div class="sidebar" id="sidebar">
         <span class="close-sidebar" onclick="toggleSidebar()">&times;</span>
-        <h2>Sahyog Menu</h2>
-        <a href="index.html"><i class="fas fa-home"></i> Home</a>
-        <a href="mission.html"><i class="fas fa-bullseye"></i> Mission Plan</a>
-        <a href="register.html"><i class="fas fa-user-plus"></i> Register Now</a>
-        <a href="login.html"><i class="fas fa-sign-in-alt"></i> Member Login</a>
+        <h2 style="color:#1a73e8; margin-bottom:20px;">Main Menu</h2>
+        <a href="index.html">Home</a>
+        <a href="mission.html">Mission Plan</a>
+        <a href="register.html">Register Now</a>
+        <a href="login.html">Member Login</a>
+        <a href="admin.html" style="margin-top:20px; font-size:12px; opacity:0.5;">Admin Only</a>
     </div>
 
     <section class="hero">
         <h1>Sahyog Sutra Mission</h1>
-        <p>Samaj seva aur har parivar ko arthik mazbooti dene ka sankalp.</p>
-        <a href="register.html" class="join-btn">Register Karein</a>
+        <p>Samaj Seva aur Arthik Sashaktikaran ka naya rasta.</p>
+        <a href="register.html" class="join-btn">अभी जुड़ें (Register)</a>
     </section>
 
     <div class="helpline-container">
         <div class="support-options" id="supportOptions">
-            <a href="https://wa.me/919458452809" class="opt"><i class="fab fa-whatsapp"></i> WhatsApp Help</a>
-            <a href="tel:9458452809" class="opt"><i class="fas fa-phone-alt"></i> Call Admin</a>
+            <a href="https://wa.me/919458452809" class="opt" target="_blank">
+                <i class="fab fa-whatsapp"></i> WhatsApp Help
+            </a>
+            <a href="tel:9458452809" class="opt">
+                <i class="fas fa-phone-alt"></i> Admin Calling
+            </a>
         </div>
         <button class="main-support-btn" onclick="toggleSupport()">
             <i class="fas fa-headset"></i>
@@ -69,10 +75,22 @@
     </div>
 
     <script>
-        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
-        function toggleSupport() { document.getElementById('supportOptions').classList.toggle('show'); }
+        function toggleSidebar() { 
+            document.getElementById('sidebar').classList.toggle('active'); 
+        }
+        function toggleSupport() { 
+            document.getElementById('supportOptions').classList.toggle('show'); 
+        }
+
+        // स्क्रीन पर कहीं भी क्लिक करने से सपोर्ट मेनू बंद हो जाए
+        window.onclick = function(event) {
+            if (!event.target.matches('.main-support-btn') && !event.target.matches('.fa-headset')) {
+                var dropdowns = document.getElementById("supportOptions");
+                if (dropdowns.classList.contains('show')) {
+                    dropdowns.classList.remove('show');
+                }
+            }
+        }
     </script>
-</body>
-</html>
 </body>
 </html>
