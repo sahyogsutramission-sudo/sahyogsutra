@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Sahyog Sutra</title>
+    <style>
+        body { font-family: sans-serif; background: #f4f7f6; padding: 20px; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        h1 { color: #1a73e8; text-align: center; }
+        .box { border: 1px solid #ddd; padding: 20px; border-radius: 10px; margin-bottom: 20px; background: #f9f9f9; }
+        input { padding: 10px; width: 200px; border: 1px solid #ccc; border-radius: 5px; }
+        button { padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background: #1a73e8; color: white; }
+        .used { color: red; font-weight: bold; }
+        .unused { color: green; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Admin Control Panel</h1>
+
+    <div class="box">
+        <h3>Create New Activation PIN (₹21)</h3>
+        <input type="number" id="newPin" placeholder="Enter 6-digit PIN">
+        <button onclick="generatePin()">Add PIN to Database</button>
+    </div>
+
+    <div class="box">
+        <h3>Registered Members List</h3>
+        <table id="userTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Mobile</th>
+                    <th>PIN Used</th>
+                </tr>
+            </thead>
+            <tbody id="userData"></tbody>
+        </table>
+    </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+<script>
+    // यहाँ अपनी Firebase Config भरें (वही जो register.html में है)
+    const firebaseConfig = {
+        apiKey: "YOUR_API_KEY",
+        databaseURL: "YOUR_DATABASE_URL",
+        projectId: "YOUR_PROJECT_ID",
+        appId: "YOUR_APP_ID"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // नया पिन बनाने का फंक्शन
+    function generatePin() {
+        const pin = document.getElementById('newPin').value;
+        if(pin.length < 4) { alert("Please enter a valid PIN"); return; }
+        
+        db.ref('pins/' + pin).set({
+            pin: pin,
+            used: false
+        }).then(() => {
+            alert("PIN " + pin + " successfully added!");
+            document.getElementById('newPin').value = "";
+        });
+    }
+
+    // सदस्यों का डेटा लोड करना
+    db.ref('users').on('value', (snapshot) => {
+        const data = snapshot.val();
+        let tableHtml = "";
+        for (let id in data) {
+            tableHtml += `<tr>
+                <td>${data[id].name}</td>
+                <td>${data[id].mobile}</td>
+                <td>${data[id].pin}</td>
+            </tr>`;
+        }
+        document.getElementById('userData').innerHTML = tableHtml;
+    });
+</script>
+
+</body>
+</html>
