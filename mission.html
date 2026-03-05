@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>हमारा मिशन | सहयोग सूत्र</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; font-family: 'Poppins', sans-serif; }
+        body { background: #fdfdfd; color: #333; line-height: 1.8; }
+        
+        /* Navbar & Sidebar */
+        nav { background: white; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
+        .logo { font-size: 22px; font-weight: bold; color: #1a73e8; text-decoration: none; }
+        .menu-btn { font-size: 24px; cursor: pointer; color: #333; }
+
+        .sidebar { position: fixed; top: 0; left: -100%; width: 280px; height: 100%; background: #111; transition: 0.4s; z-index: 2000; padding: 30px 20px; }
+        .sidebar.active { left: 0; }
+        .sidebar a { display: block; color: #bbb; text-decoration: none; padding: 15px 0; border-bottom: 1px solid #222; font-size: 16px; }
+        .close-sidebar { position: absolute; top: 20px; right: 20px; color: white; font-size: 28px; cursor: pointer; }
+
+        /* Content Area */
+        .container { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+        .header-title { text-align: center; margin-bottom: 50px; }
+        .header-title h1 { color: #1a73e8; font-size: 32px; border-bottom: 4px solid #28a745; display: inline-block; padding-bottom: 10px; }
+        
+        .section { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 30px; border-left: 6px solid #28a745; }
+        .section h2 { color: #28a745; margin-bottom: 15px; font-size: 24px; display: flex; align-items: center; gap: 10px; }
+        
+        .point { margin-bottom: 15px; padding-left: 20px; position: relative; }
+        .point::before { content: '✓'; position: absolute; left: 0; color: #28a745; font-weight: bold; }
+        
+        .highlight-box { background: #fff3cd; border: 1px dashed #856404; padding: 20px; border-radius: 10px; margin-top: 20px; font-weight: bold; text-align: center; color: #856404; }
+        
+        .footer-btn { display: flex; justify-content: center; margin-top: 40px; }
+        .btn-join { background: #28a745; color: white; padding: 15px 40px; border-radius: 30px; text-decoration: none; font-weight: bold; box-shadow: 0 4px 15px rgba(40,167,69,0.3); }
+
+        /* Floating Support */
+        .helpline { position: fixed; bottom: 20px; right: 20px; z-index: 3000; }
+        .sup-btn { background: #1a73e8; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 24px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: none; }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="logo">Sahyog Sutra</a>
+        <div class="menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></div>
+    </nav>
+
+    <div class="sidebar" id="sidebar">
+        <span class="close-sidebar" onclick="toggleSidebar()">&times;</span>
+        <h2 style="color:#1a73e8; margin-bottom:20px;">मुख्य मेनू</h2>
+        <a href="index.html">होम पेज (Home)</a>
+        <a href="mission.html" style="color:white; font-weight:bold;">मिशन प्लान (Plan)</a>
+        <a href="register.html">पंजीकरण (Register)</a>
+        <a href="login.html">लॉगिन (Login)</a>
+    </div>
+
+    <div class="container">
+        <div class="header-title">
+            <h1>सहयोग सूत्र मिशन - विस्तार से</h1>
+            <p>समाज सेवा एवं जन-कल्याण की एक नई पहल</p>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-flag"></i> हमारा मुख्य उद्देश्य</h2>
+            <p>सहयोग सूत्र मिशन का जन्म समाज के उन मध्यम और निम्न वर्गीय परिवारों की सहायता के लिए हुआ है, जो छोटे-छोटे आर्थिक सहयोग से एक बड़ी शक्ति बन सकते हैं। हमारा लक्ष्य हर हाथ को आत्मनिर्भर बनाना और समाज में एकता स्थापित करना है।</p>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-tasks"></i> कार्य करने का तरीका (System Plan)</h2>
+            <div class="point"><strong>पंजीकरण:</strong> मिशन से जुड़ने के लिए केवल ₹21 का छोटा सा सहयोग (एक्टिवेशन पिन) अनिवार्य है।</div>
+            <div class="point"><strong>टीम सहयोग:</strong> यहाँ हर सदस्य एक-दूसरे की मदद करता है। सिस्टम पूरी तरह से पारदर्शिता पर आधारित है।</div>
+            <div class="point"><strong>आर्थिक लाभ:</strong> जैसे-जैसे मिशन का परिवार बढ़ता है, सिस्टम द्वारा निर्धारित नियमों के अनुसार सदस्यों को सहायता राशि प्राप्त होती है।</div>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-hand-holding-heart"></i> मिशन के फायदे</h2>
+            <p>इस मिशन से जुड़ने पर आपको निम्नलिखित लाभ मिलते हैं:</p>
+            <ul style="list-style: none; padding-left: 20px;">
+                <li class="point">कम से कम निवेश में समाज सेवा का मौका।</li>
+                <li class="point">NGO द्वारा समर्थित और सुरक्षित प्लेटफार्म।</li>
+                <li class="point">Helpline और Admin द्वारा 24/7 सहायता।</li>
+            </ul>
+            <div class="highlight-box">
+                "आपका ₹21 का छोटा सा योगदान, किसी के जीवन में बड़ा बदलाव ला सकता है।"
+            </div>
+        </div>
+
+        <div class="footer-btn">
+            <a href="register.html" class="btn-join">अभी मिशन से जुड़ें</a>
+        </div>
+    </div>
+
+    <div class="helpline">
+        <button class="sup-btn" onclick="location.href='https://wa.me/919458452809'">
+            <i class="fab fa-whatsapp"></i>
+        </button>
+    </div>
+
+    <script>
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
+    </script>
+</body>
+</html>
