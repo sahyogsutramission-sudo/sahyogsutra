@@ -3,44 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard | Sahyog Sutra</title>
+    <title>Master Admin | Sahyog Sutra</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { font-family: sans-serif; background: #f4f7f6; padding: 20px; }
-        .container { max-width: 800px; margin: auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        h1 { color: #1a73e8; text-align: center; }
-        .box { border: 1px solid #ddd; padding: 20px; border-radius: 10px; margin-bottom: 20px; background: #f9f9f9; }
-        input { padding: 10px; width: 200px; border: 1px solid #ccc; border-radius: 5px; }
-        button { padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
-        th { background: #1a73e8; color: white; }
-        .used { color: red; font-weight: bold; }
-        .unused { color: green; font-weight: bold; }
+        * { margin:0; padding:0; box-sizing:border-box; font-family: 'Poppins', sans-serif; }
+        body { background: #f0f2f5; padding: 20px; }
+        
+        /* Login Overlay */
+        #adminAuth { position: fixed; top:0; left:0; width:100%; height:100%; background:white; z-index:9999; display: flex; justify-content: center; align-items: center; }
+        .auth-card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; width: 90%; max-width: 350px; }
+        
+        /* Dashboard Layout */
+        #dashboard { display: none; max-width: 900px; margin: auto; }
+        .card { background: white; padding: 25px; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        h2 { color: #1a73e8; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        
+        input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; }
+        .btn { background: #28a745; color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: white; }
+        th, td { border: 1px solid #eee; padding: 12px; text-align: left; font-size: 14px; }
+        th { background: #f8f9fa; color: #555; }
+        .status-used { color: #dc3545; font-weight: bold; }
+        .status-new { color: #28a745; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>Admin Control Panel</h1>
+<div id="adminAuth">
+    <div class="auth-card">
+        <i class="fas fa-user-shield fa-3x" style="color:#1a73e8; margin-bottom:15px;"></i>
+        <h2>Admin Login</h2>
+        <input type="password" id="adminPass" placeholder="Enter Admin Password">
+        <button class="btn" onclick="checkAuth()">Login Dashboard</button>
+    </div>
+</div>
 
-    <div class="box">
-        <h3>Create New Activation PIN (₹21)</h3>
-        <input type="number" id="newPin" placeholder="Enter 6-digit PIN">
-        <button onclick="generatePin()">Add PIN to Database</button>
+<div id="dashboard">
+    <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h1>Sahyog Admin Dashboard</h1>
+        <button onclick="location.reload()" style="background:#666; color:white; border:none; padding:5px 15px; border-radius:5px;">Logout</button>
     </div>
 
-    <div class="box">
-        <h3>Registered Members List</h3>
-        <table id="userTable">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Mobile</th>
-                    <th>PIN Used</th>
-                </tr>
-            </thead>
-            <tbody id="userData"></tbody>
-        </table>
+    <div class="card">
+        <h2><i class="fas fa-plus-circle"></i> Create New ₹21 PIN</h2>
+        <div style="display:flex; gap:10px;">
+            <input type="number" id="pinInput" placeholder="Enter 6-digit PIN">
+            <button class="btn" style="width:auto;" onclick="makePin()">Create</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2><i class="fas fa-users"></i> Registered Members</h2>
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Name</th>
+                        <th>Mobile</th>
+                        <th>PIN</th>
+                    </tr>
+                </thead>
+                <tbody id="memberList"></tbody>
+            </table>
+        </div>
     </div>
 </div>
 
@@ -48,7 +75,7 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
 <script>
-    // यहाँ अपनी Firebase Config भरें (वही जो register.html में है)
+    // 1. Firebase Config (Paste your actual details here)
     const firebaseConfig = {
         apiKey: "YOUR_API_KEY",
         databaseURL: "YOUR_DATABASE_URL",
@@ -58,34 +85,47 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // नया पिन बनाने का फंक्शन
-    function generatePin() {
-        const pin = document.getElementById('newPin').value;
-        if(pin.length < 4) { alert("Please enter a valid PIN"); return; }
+    // 2. Authentication Logic
+    function checkAuth() {
+        const pass = document.getElementById('adminPass').value;
+        // यहाँ अपना मनपसंद पासवर्ड सेट करें (जैसे: 1234)
+        if(pass === "9458") { 
+            document.getElementById('adminAuth').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+            loadData();
+        } else {
+            alert("Incorrect Admin Password!");
+        }
+    }
+
+    // 3. Create PIN Logic
+    function makePin() {
+        const pin = document.getElementById('pinInput').value;
+        if(pin.length < 4) return alert("Valid PIN enter karein");
         
-        db.ref('pins/' + pin).set({
-            pin: pin,
-            used: false
-        }).then(() => {
-            alert("PIN " + pin + " successfully added!");
-            document.getElementById('newPin').value = "";
+        db.ref('pins/' + pin).set({ pin: pin, used: false })
+        .then(() => {
+            alert("PIN " + pin + " Created Successfully!");
+            document.getElementById('pinInput').value = "";
         });
     }
 
-    // सदस्यों का डेटा लोड करना
-    db.ref('users').on('value', (snapshot) => {
-        const data = snapshot.val();
-        let tableHtml = "";
-        for (let id in data) {
-            tableHtml += `<tr>
-                <td>${data[id].name}</td>
-                <td>${data[id].mobile}</td>
-                <td>${data[id].pin}</td>
-            </tr>`;
-        }
-        document.getElementById('userData').innerHTML = tableHtml;
-    });
+    // 4. Load Data Logic
+    function loadData() {
+        db.ref('users').on('value', (snap) => {
+            let html = "";
+            snap.forEach((child) => {
+                const user = child.val();
+                html += `<tr>
+                    <td>${user.regDate || 'N/A'}</td>
+                    <td>${user.name}</td>
+                    <td>${user.mobile}</td>
+                    <td>${user.pin}</td>
+                </tr>`;
+            });
+            document.getElementById('memberList').innerHTML = html;
+        });
+    }
 </script>
-
 </body>
 </html>
